@@ -13,7 +13,8 @@ public static class MauiProgram
 		{
 			filePath = filePath.Replace("Assets/", string.Empty);
 #if ANDROID
-			return Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.Assets.Open(path);  
+			filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), filePath);
+			return  new FileStream( filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
 #elif IOS
 			filePath = Path.Combine(Environment.CurrentDirectory, filePath);
 			return  new FileStream( filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
