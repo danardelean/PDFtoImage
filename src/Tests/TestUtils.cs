@@ -1,10 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+using NUnit.Framework.Legacy;
 
 namespace PDFtoImage.Tests
 {
+#if NET6_0_OR_GREATER
+    [SupportedOSPlatform("Windows")]
+    [SupportedOSPlatform("Linux")]
+    [SupportedOSPlatform("macOS")]
+    [SupportedOSPlatform("iOS")]
+    [SupportedOSPlatform("Android31.0")]
+#endif
     public static class TestUtils
     {
         public static void CompareStreams(string expectedFilePath, Stream outputStream)
@@ -15,17 +23,17 @@ namespace PDFtoImage.Tests
 
         public static void CompareStreams(Stream expectedStream, Stream outputStream)
         {
-            Assert.IsNotNull(outputStream);
-            Assert.AreNotEqual(0, outputStream.Length);
+            ClassicAssert.IsNotNull(outputStream);
+            ClassicAssert.AreNotEqual(0, outputStream.Length);
 
-            Assert.AreEqual(expectedStream.Length, outputStream.Length);
+            ClassicAssert.AreEqual(expectedStream.Length, outputStream.Length);
 
             expectedStream.Position = 0;
             outputStream.Position = 0;
 
             for (int i = 0; i < expectedStream.Length; i++)
             {
-                Assert.AreEqual(expectedStream.ReadByte(), outputStream.ReadByte());
+                ClassicAssert.AreEqual(expectedStream.ReadByte(), outputStream.ReadByte());
             }
         }
 
@@ -44,7 +52,18 @@ namespace PDFtoImage.Tests
             {
                 return OSPlatform.OSX.ToString();
             }
+#if NET6_0_OR_GREATER
+            else if (OperatingSystem.IsAndroid())
+            {
+                return "ANDROID";
+            }
+            else if (OperatingSystem.IsIOS())
+            {
+                return "IOS";
+            }
 
+#endif
+       
 
             throw new PlatformNotSupportedException();
 #else
@@ -54,23 +73,30 @@ namespace PDFtoImage.Tests
 #endif
         }
 
-        public static FileStream GetInputStream(string filePath)
+        public static Func<string,Stream> GetInputStream = GetInputStreamDefaultImpl;
+        
+        public static FileStream GetInputStreamDefaultImpl(string filePath)
         {
-            return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+            filePath = Path.Combine("..", filePath);
+            return new FileStream( filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
         }
 
-        public static FileStream GetExpectedStream(string filePath)
+        public static Func<string,FileStream> GetExpectedStream = GetExpectedStreamDefaultImpl;
+        public static FileStream GetExpectedStreamDefaultImpl(string filePath)
         {
+            filePath = Path.Combine("..", filePath);
             if (!File.Exists(filePath))
-                Assert.Inconclusive("The expected asset '{0}' could not be found.", filePath);
+                ClassicAssert.Inconclusive($"The expected asset '{filePath}' could not be found." );
 
             return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
         }
 
         private static readonly object _lockObject = new();
-
-        public static Stream CreateOutputStream(string expectedPath)
+        
+        public static Func<string,Stream> CreateOutputStream = CreateOutputStreamDefaultImpl;
+        public static Stream CreateOutputStreamDefaultImpl(string expectedPath)
         {
+            expectedPath = Path.Combine("..", expectedPath);
             if (!TestBase.SaveOutputInGeneratedFolder)
                 return new MemoryStream();
 

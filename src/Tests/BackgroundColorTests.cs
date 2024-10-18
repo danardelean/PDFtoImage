@@ -1,48 +1,49 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using SkiaSharp;
 using System;
 using System.IO;
+using PDFtoImage.Tests;
 using static PDFtoImage.Conversion;
 using static PDFtoImage.Tests.TestUtils;
 
 namespace Tests
 {
-    [TestClass]
+    [TestFixture]
     public class BackgroundColorTests
     {
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
 #if NET6_0_OR_GREATER
             if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS())
-                Assert.Inconclusive("This test must run on Windows, Linux or macOS.");
+                Assert.Ignore("This test must run on Windows, Linux or macOS.");
 #endif
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (White)")]
-        [DataRow((uint)0xFFFFFFFF, DisplayName = "White")]
-        [DataRow((uint)0x64FFFFFF, DisplayName = "White (100 alpha)")]
-        [DataRow((uint)0xFFFF0000, DisplayName = "Red")]
-        [DataRow((uint)0x64FF0000, DisplayName = "Red (100 alpha)")]
-        [DataRow((uint)0xFF00FF00, DisplayName = "Green")]
-        [DataRow((uint)0x6400FF00, DisplayName = "Green (100 alpha)")]
-        [DataRow((uint)0xFF0000FF, DisplayName = "Blue")]
-        [DataRow((uint)0x640000FF, DisplayName = "Blue (100 alpha)")]
-        [DataRow((uint)0xFFFFFF00, DisplayName = "Yellow")]
-        [DataRow((uint)0x64FFFF00, DisplayName = "Yellow (100 alpha)")]
-        [DataRow((uint)0xFFFF00FF, DisplayName = "Magenta")]
-        [DataRow((uint)0x64FF00FF, DisplayName = "Magenta (100 alpha)")]
-        [DataRow((uint)0xFF00FFFF, DisplayName = "Cyan")]
-        [DataRow((uint)0x6400FFFF, DisplayName = "Cyan (100 alpha)")]
-        [DataRow((uint)0xFF000000, DisplayName = "Black")]
-        [DataRow((uint)0x64000000, DisplayName = "Black (100 alpha)")]
-        [DataRow((uint)0x00FFFFFF, DisplayName = "Transparent")]
+        [Test]
+        [TestCase(null, TestName = "Default (White)")]
+        [TestCase((uint)0xFFFFFFFF, TestName = "White")]
+        [TestCase((uint)0x64FFFFFF, TestName = "White (100 alpha)")]
+        [TestCase((uint)0xFFFF0000, TestName = "Red")]
+        [TestCase((uint)0x64FF0000, TestName = "Red (100 alpha)")]
+        [TestCase((uint)0xFF00FF00, TestName = "Green")]
+        [TestCase((uint)0x6400FF00, TestName = "Green (100 alpha)")]
+        [TestCase((uint)0xFF0000FF, TestName = "Blue")]
+        [TestCase((uint)0x640000FF, TestName = "Blue (100 alpha)")]
+        [TestCase((uint)0xFFFFFF00, TestName = "Yellow")]
+        [TestCase((uint)0x64FFFF00, TestName = "Yellow (100 alpha)")]
+        [TestCase((uint)0xFFFF00FF, TestName = "Magenta")]
+        [TestCase((uint)0x64FF00FF, TestName = "Magenta (100 alpha)")]
+        [TestCase((uint)0xFF00FFFF, TestName = "Cyan")]
+        [TestCase((uint)0x6400FFFF, TestName = "Cyan (100 alpha)")]
+        [TestCase((uint)0xFF000000, TestName = "Black")]
+        [TestCase((uint)0x64000000, TestName = "Black (100 alpha)")]
+        [TestCase((uint)0x00FFFFFF, TestName = "Transparent")]
         public void SaveJpegWithBackgroundColor(uint? backgroundColor)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.jpg");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.jpg");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (backgroundColor == null)
@@ -53,30 +54,30 @@ namespace Tests
             CompareStreams(expectedPath, outputStream);
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (White)")]
-        [DataRow((uint)0xFFFFFFFF, DisplayName = "White")]
-        [DataRow((uint)0x64FFFFFF, DisplayName = "White (100 alpha)")]
-        [DataRow((uint)0xFFFF0000, DisplayName = "Red")]
-        [DataRow((uint)0x64FF0000, DisplayName = "Red (100 alpha)")]
-        [DataRow((uint)0xFF00FF00, DisplayName = "Green")]
-        [DataRow((uint)0x6400FF00, DisplayName = "Green (100 alpha)")]
-        [DataRow((uint)0xFF0000FF, DisplayName = "Blue")]
-        [DataRow((uint)0x640000FF, DisplayName = "Blue (100 alpha)")]
-        [DataRow((uint)0xFFFFFF00, DisplayName = "Yellow")]
-        [DataRow((uint)0x64FFFF00, DisplayName = "Yellow (100 alpha)")]
-        [DataRow((uint)0xFFFF00FF, DisplayName = "Magenta")]
-        [DataRow((uint)0x64FF00FF, DisplayName = "Magenta (100 alpha)")]
-        [DataRow((uint)0xFF00FFFF, DisplayName = "Cyan")]
-        [DataRow((uint)0x6400FFFF, DisplayName = "Cyan (100 alpha)")]
-        [DataRow((uint)0xFF000000, DisplayName = "Black")]
-        [DataRow((uint)0x64000000, DisplayName = "Black (100 alpha)")]
-        [DataRow((uint)0x00FFFFFF, DisplayName = "Transparent")]
+        [Test]
+        [TestCase(null, TestName = "Default (White)")]
+        [TestCase((uint)0xFFFFFFFF, TestName = "White")]
+        [TestCase((uint)0x64FFFFFF, TestName = "White (100 alpha)")]
+        [TestCase((uint)0xFFFF0000, TestName = "Red")]
+        [TestCase((uint)0x64FF0000, TestName = "Red (100 alpha)")]
+        [TestCase((uint)0xFF00FF00, TestName = "Green")]
+        [TestCase((uint)0x6400FF00, TestName = "Green (100 alpha)")]
+        [TestCase((uint)0xFF0000FF, TestName = "Blue")]
+        [TestCase((uint)0x640000FF, TestName = "Blue (100 alpha)")]
+        [TestCase((uint)0xFFFFFF00, TestName = "Yellow")]
+        [TestCase((uint)0x64FFFF00, TestName = "Yellow (100 alpha)")]
+        [TestCase((uint)0xFFFF00FF, TestName = "Magenta")]
+        [TestCase((uint)0x64FF00FF, TestName = "Magenta (100 alpha)")]
+        [TestCase((uint)0xFF00FFFF, TestName = "Cyan")]
+        [TestCase((uint)0x6400FFFF, TestName = "Cyan (100 alpha)")]
+        [TestCase((uint)0xFF000000, TestName = "Black")]
+        [TestCase((uint)0x64000000, TestName = "Black (100 alpha)")]
+        [TestCase((uint)0x00FFFFFF, TestName = "Transparent")]
         public void SavePngWithBackgroundColor(uint? backgroundColor)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.png");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.png");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (backgroundColor == null)
@@ -87,30 +88,30 @@ namespace Tests
             CompareStreams(expectedPath, outputStream);
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (White)")]
-        [DataRow((uint)0xFFFFFFFF, DisplayName = "White")]
-        [DataRow((uint)0x64FFFFFF, DisplayName = "White (100 alpha)")]
-        [DataRow((uint)0xFFFF0000, DisplayName = "Red")]
-        [DataRow((uint)0x64FF0000, DisplayName = "Red (100 alpha)")]
-        [DataRow((uint)0xFF00FF00, DisplayName = "Green")]
-        [DataRow((uint)0x6400FF00, DisplayName = "Green (100 alpha)")]
-        [DataRow((uint)0xFF0000FF, DisplayName = "Blue")]
-        [DataRow((uint)0x640000FF, DisplayName = "Blue (100 alpha)")]
-        [DataRow((uint)0xFFFFFF00, DisplayName = "Yellow")]
-        [DataRow((uint)0x64FFFF00, DisplayName = "Yellow (100 alpha)")]
-        [DataRow((uint)0xFFFF00FF, DisplayName = "Magenta")]
-        [DataRow((uint)0x64FF00FF, DisplayName = "Magenta (100 alpha)")]
-        [DataRow((uint)0xFF00FFFF, DisplayName = "Cyan")]
-        [DataRow((uint)0x6400FFFF, DisplayName = "Cyan (100 alpha)")]
-        [DataRow((uint)0xFF000000, DisplayName = "Black")]
-        [DataRow((uint)0x64000000, DisplayName = "Black (100 alpha)")]
-        [DataRow((uint)0x00FFFFFF, DisplayName = "Transparent")]
+        [Test]
+        [TestCase(null, TestName = "Default (White)")]
+        [TestCase((uint)0xFFFFFFFF, TestName = "White")]
+        [TestCase((uint)0x64FFFFFF, TestName = "White (100 alpha)")]
+        [TestCase((uint)0xFFFF0000, TestName = "Red")]
+        [TestCase((uint)0x64FF0000, TestName = "Red (100 alpha)")]
+        [TestCase((uint)0xFF00FF00, TestName = "Green")]
+        [TestCase((uint)0x6400FF00, TestName = "Green (100 alpha)")]
+        [TestCase((uint)0xFF0000FF, TestName = "Blue")]
+        [TestCase((uint)0x640000FF, TestName = "Blue (100 alpha)")]
+        [TestCase((uint)0xFFFFFF00, TestName = "Yellow")]
+        [TestCase((uint)0x64FFFF00, TestName = "Yellow (100 alpha)")]
+        [TestCase((uint)0xFFFF00FF, TestName = "Magenta")]
+        [TestCase((uint)0x64FF00FF, TestName = "Magenta (100 alpha)")]
+        [TestCase((uint)0xFF00FFFF, TestName = "Cyan")]
+        [TestCase((uint)0x6400FFFF, TestName = "Cyan (100 alpha)")]
+        [TestCase((uint)0xFF000000, TestName = "Black")]
+        [TestCase((uint)0x64000000, TestName = "Black (100 alpha)")]
+        [TestCase((uint)0x00FFFFFF, TestName = "Transparent")]
         public void SaveWebpWithBackgroundColor(uint? backgroundColor)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.webp");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "BackgroundColor", $"hundesteuer-anmeldung_{GetFileName(backgroundColor ?? SKColors.White)}.webp");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (backgroundColor == null)

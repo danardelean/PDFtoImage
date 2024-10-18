@@ -1,41 +1,42 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PDFtoImage;
 using System;
 using System.IO;
 using System.Text;
+using PDFtoImage.Tests;
 using static PDFtoImage.Compatibility.Conversion;
 using static PDFtoImage.Tests.TestUtils;
 
 namespace Tests.Compatibility
 {
-    [TestClass]
+    [TestFixture]
     public class AntiAliasingTests
     {
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
 #if NET6_0_OR_GREATER
             if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS())
-                Assert.Inconclusive("This test must run on Windows, Linux or macOS.");
+                Assert.Ignore("This test must run on Windows, Linux or macOS.");
 #endif
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (None)")]
-        [DataRow(PdfAntiAliasing.None, DisplayName = "None")]
-        [DataRow(PdfAntiAliasing.Text, DisplayName = "Text")]
-        [DataRow(PdfAntiAliasing.Images, DisplayName = "Images")]
-        [DataRow(PdfAntiAliasing.Paths, DisplayName = "Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images, DisplayName = "Text | Images")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, DisplayName = "Text | Paths")]
-        [DataRow(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Images | Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Text | Images | Paths")]
-        [DataRow(PdfAntiAliasing.All, DisplayName = "All")]
+        [Test]
+        [TestCase(null, TestName = "Default (None)")]
+        [TestCase(PdfAntiAliasing.None, TestName = "None")]
+        [TestCase(PdfAntiAliasing.Text, TestName = "Text")]
+        [TestCase(PdfAntiAliasing.Images, TestName = "Images")]
+        [TestCase(PdfAntiAliasing.Paths, TestName = "Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images, TestName = "Text | Images")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, TestName = "Text | Paths")]
+        [TestCase(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Images | Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Text | Images | Paths")]
+        [TestCase(PdfAntiAliasing.All, TestName = "All")]
         public void SaveJpegWithAntiAliasing(PdfAntiAliasing? antiAliasing)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.jpg");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.jpg");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (antiAliasing == null)
@@ -46,22 +47,22 @@ namespace Tests.Compatibility
             CompareStreams(expectedPath, outputStream);
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (None)")]
-        [DataRow(PdfAntiAliasing.None, DisplayName = "None")]
-        [DataRow(PdfAntiAliasing.Text, DisplayName = "Text")]
-        [DataRow(PdfAntiAliasing.Images, DisplayName = "Images")]
-        [DataRow(PdfAntiAliasing.Paths, DisplayName = "Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images, DisplayName = "Text | Images")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, DisplayName = "Text | Paths")]
-        [DataRow(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Images | Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Text | Images | Paths")]
-        [DataRow(PdfAntiAliasing.All, DisplayName = "All")]
+        [Test]
+        [TestCase(null, TestName = "Default (None)")]
+        [TestCase(PdfAntiAliasing.None, TestName = "None")]
+        [TestCase(PdfAntiAliasing.Text, TestName = "Text")]
+        [TestCase(PdfAntiAliasing.Images, TestName = "Images")]
+        [TestCase(PdfAntiAliasing.Paths, TestName = "Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images, TestName = "Text | Images")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, TestName = "Text | Paths")]
+        [TestCase(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Images | Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Text | Images | Paths")]
+        [TestCase(PdfAntiAliasing.All, TestName = "All")]
         public void SavePngWithAntiAliasing(PdfAntiAliasing? antiAliasing)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.png");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.png");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (antiAliasing == null)
@@ -72,22 +73,22 @@ namespace Tests.Compatibility
             CompareStreams(expectedPath, outputStream);
         }
 
-        [TestMethod]
-        [DataRow(null, DisplayName = "Default (None)")]
-        [DataRow(PdfAntiAliasing.None, DisplayName = "None")]
-        [DataRow(PdfAntiAliasing.Text, DisplayName = "Text")]
-        [DataRow(PdfAntiAliasing.Images, DisplayName = "Images")]
-        [DataRow(PdfAntiAliasing.Paths, DisplayName = "Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images, DisplayName = "Text | Images")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, DisplayName = "Text | Paths")]
-        [DataRow(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Images | Paths")]
-        [DataRow(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, DisplayName = "Text | Images | Paths")]
-        [DataRow(PdfAntiAliasing.All, DisplayName = "All")]
+        [Test]
+        [TestCase(null, TestName = "Default (None)")]
+        [TestCase(PdfAntiAliasing.None, TestName = "None")]
+        [TestCase(PdfAntiAliasing.Text, TestName = "Text")]
+        [TestCase(PdfAntiAliasing.Images, TestName = "Images")]
+        [TestCase(PdfAntiAliasing.Paths, TestName = "Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images, TestName = "Text | Images")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Paths, TestName = "Text | Paths")]
+        [TestCase(PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Images | Paths")]
+        [TestCase(PdfAntiAliasing.Text | PdfAntiAliasing.Images | PdfAntiAliasing.Paths, TestName = "Text | Images | Paths")]
+        [TestCase(PdfAntiAliasing.All, TestName = "All")]
         public void SaveWebpWithAntiAliasing(PdfAntiAliasing? antiAliasing)
         {
-            var expectedPath = Path.Combine("..", "Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.webp");
+            var expectedPath = Path.Combine("Assets", "Expected", GetPlatformAsString(), "AntiAliasing", $"hundesteuer-anmeldung_{GetFileName(antiAliasing ?? PdfAntiAliasing.All)}.webp");
 
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", "hundesteuer-anmeldung.pdf"));
+            using var inputStream = GetInputStream(Path.Combine("Assets", "hundesteuer-anmeldung.pdf"));
             using var outputStream = CreateOutputStream(expectedPath);
 
             if (antiAliasing == null)

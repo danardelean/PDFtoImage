@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PDFtoImage.Tests;
 using System;
 using System.IO;
@@ -7,17 +7,17 @@ using static PDFtoImage.Tests.TestUtils;
 
 namespace Tests.Compatibility
 {
-    [TestClass]
+    [TestFixture]
     public class ExceptionTests : TestBase
     {
-        [TestMethod]
-        [DataRow("hundesteuer-anmeldung.pdf")]
-        [DataRow("SocialPreview.pdf")]
-        [DataRow("Wikimedia_Commons_web.pdf")]
+        [Test]
+        [TestCase("hundesteuer-anmeldung.pdf")]
+        [TestCase("SocialPreview.pdf")]
+        [TestCase("Wikimedia_Commons_web.pdf")]
         public void ThrowsPageNotFound(string inputFile)
         {
-            using var inputStream = GetInputStream(Path.Combine("..", "Assets", inputFile));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ToImage(inputStream, page: 80085));
+            using var inputStream = GetInputStream(Path.Combine("Assets", inputFile));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ToImage(inputStream, page: 80085));
         }
     }
 }

@@ -2,9 +2,11 @@
   <!-- Assembly -->
   <PropertyGroup>
     <TargetFrameworks>net462;net471;net481;net6.0;net7.0;net8.0</TargetFrameworks>
+<!--    ;net8.0-ios;net8.0-android-->
     <AssemblyName>PDFtoImage.Tests</AssemblyName>
     <RootNamespace>PDFtoImage.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
+  
   </PropertyGroup>
 
   <!-- C# compiler -->
@@ -16,6 +18,13 @@
     <NoWarn>CS0618,CA1416</NoWarn>
   </PropertyGroup>
 
+    <!-- iOS packages -->
+<!--  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">-->
+<!--        <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
+<!--    <ApplicationId>com.test.pdftoimage</ApplicationId>-->
+<!--    <CreatePackage>false</CreatePackage>-->
+<!--  </PropertyGroup>-->
+  
   <ItemGroup>
     <None Include="Assets\**" />
     <ContentWithTargetPath Include="Assets\**">
@@ -24,9 +33,6 @@
     </ContentWithTargetPath>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="SaveOutputInGeneratedFolder.runsettings" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="SaveOutputInGeneratedFolder.runsettings">
@@ -42,7 +48,8 @@
   <!-- NuGet Icon -->
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.6.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
   </ItemGroup>
+  
 </Project>
